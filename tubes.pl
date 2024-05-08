@@ -94,3 +94,21 @@ kelembapan(NilaiKelembapan, Skor) :- (Kelembapan > 75 -> Skor is 3;
 if (Skor >= 12) then need_much_water.
 if (Skor >= 8, Skor < 12 ) then need_normal_water.
 if (Skor < 8) then need_little_water.
+
+% tingkat_kebutuhan_air(Tumbuhan, Suhu, Kelembapan, CurahHujan, PH, KebutuhanAir) :-
+%                   (Suhu > 35 -> SkorSuhu is 3;
+%                   (Suhu >= 25, Suhu =< 35) -> SkorSuhu is 2;
+%                   Suhu < 25 -> SkorSuhu is 1),
+%                   (Kelembapan > 75 -> SkorKelembapan is 3;
+%                   (Kelembapan >= 50, Kelembapan =< 75) -> SkorKelembapan is 2; 
+%                   Kelembapan < 50 -> SkorKelembapan is 1), 
+%                   (CurahHujan > 20 -> SkorCurahHujan is 3;
+%                   (CurahHujan >= 5, CurahHujan =< 20) -> SkorCurahHujan is 2;
+%                   CurahHujan < 5 -> SkorCurahHujan is 1), 
+%                   (PH > 6.5 -> SkorPH is 3; 
+%                   (PH >= 6.0, PH =< 6.5) -> SkorPH is 2; 
+%                   PH < 6.0 -> SkorPH is 1),
+%                   TotalScore is SkorSuhu + SkorKelembapan + SkorCurahHujan + SkorPH,
+%                   (TotalScore >= 12 -> KebutuhanAir = 'high';
+%                   (TotalScore >= 8, TotalScore < 12) -> KebutuhanAir = 'middle';
+%                   TotalScore < 8 -> KebutuhanAir = 'low').
