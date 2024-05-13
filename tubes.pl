@@ -1,14 +1,23 @@
 :- discontiguous check_if_exist/1.
 
+% informasi assertion
+kondisi([]) :- !.
+kondisi([Head | Tail]) :- write(Head), nl, kondisi(Tail).
+print_kondisi :- write("<< Assertion menu >>"), List = ['1. tanah_kering/0', '2. tanah_lembab/0', '3. input_vol_container/1', 
+                        '4. input_vol_1_irigasi/1', '5. input_jlh_irigasi/1', '6. input_suhu/1' , '7. input_kelembaban/1',
+                        '8. input_pH_tanah/1'], nl, kondisi(List).
+
 % apakah tanaman perlu disiram?
-pump_on :- tanaman_perlu_disiram, write(pump_on), nl, sleep(1.5), check_soil_condition(_).
-pump_off :- tanaman_tidak_perlu_disiram, !.
-
-check_soil_condition(CurrentCondition) :- retract(tanah_kering), read(CurrentCondition), assert(CurrentCondition), 
-                        (tanah_kering -> pump_on ; pump_off).
-
 tanaman_perlu_disiram :- tanah_kering.
-tanaman_tidak_perlu_disiram :- tanah_lembab.
+tanaman_tidak_perlu_disiram :- not(tanah_kering).
+
+cek_kondisi_tanah(Kondisi) :- retract(tanah_kering), read(Kondisi), assert(Kondisi), 
+                        (tanaman_perlu_disiram -> pump_on ; pump_off).
+
+pump_on :- write(pump_on), nl, sleep(2), cek_kondisi_tanah(_).
+pump_off.
+
+action :- (tanaman_perlu_disiram -> pump_on ; fail).
 
 % jenis irigasi apa yang cocok digunakan
 :- op(200, xf, pilihanTumbuhan).
@@ -19,17 +28,10 @@ kol pilihanTumbuhan.
 cabai jenis_penyiraman sprinkle.
 kol jenis_penyiraman drip.
 
-tentukan_jenis_penyiraman(TumbuhanTerpilih) :- write("Tumbuhan: "), read(TumbuhanTerpilih), 
+tentukan_jenis_penyiraman :- write("Tumbuhan: "), read(TumbuhanTerpilih), 
                         (pilihanTumbuhan(TumbuhanTerpilih) -> 
                         TumbuhanTerpilih jenis_penyiraman Apa, format('Jenis penyiraman: ~w.~n', [Apa]) ;
                         fail).
-
-% informasi assertion
-kondisi([]) :- !.
-kondisi([Head | Tail]) :- write(Head), nl, kondisi(Tail).
-print_kondisi :- write("<< Assertion menu >>"), List = ['1. tanah_kering/0', '2. tanah_lembab/0', '3. input_vol_container/1', 
-                        '4. input_vol_1_irigasi/1', '5. input_jlh_irigasi/1', '6. input_suhu/1' , '7. input_kelembaban/1',
-                        '8. input_pH_tanah/1'], nl, kondisi(List).
 
 % cek apakah air di container cukup untuk mengairi lahan
 :- dynamic input_vol_container/1.
@@ -92,4 +94,4 @@ cek_banyak_air_diperlukan :-
                     input_suhu(Suhu), input_kelembaban(Kelembaban), input_pH_tanah(Ph_tanah),
                     tingkat_kebutuhan_air(Suhu, Kelembaban, Ph_tanah, KebutuhanAir), jumlah_air_diperlukan(KebutuhanAir, JumlahAir),
                     format('Tingkat kebutuhan air: ~w.~nBanyak air diperlukan: ~w liter.~n', [KebutuhanAir, JumlahAir]), 
-                    tentukan_jenis_penyiraman(_).
+                    tentukan_jenis_penyiraman.
